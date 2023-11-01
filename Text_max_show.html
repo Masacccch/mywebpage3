@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>文字列拡大表示</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #textInput {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        #enlargedText {
+            text-align: center;
+            font-family: 'MS Gothic', monospace;
+            /* font-family: Arial, sans-serif; セリフなしフォントを使用 */
+            margin-top: 50px; /* 入力フィールドの下に余白を設定 */
+        }
+    </style>
+</head>
+<body>
+    <textarea id="textInput" oninput="enlargeText()" rows="4" cols="50"></textarea>
+    <div id="enlargedText"></div>
+
+    <script>
+        function countCharacters(str) {
+            /* return Array.from(str).length; */
+            let len = 0;
+		    for (let i = 0; i < str.length; i++) {
+		    (str[i].match(/[ -~]/)) ? len += 1 : len += 2;
+		    }
+
+		    return len/2;
+        }
+
+        function enlargeText() {
+            const inputText = document.getElementById("textInput").value;
+            const enlargedText = document.getElementById("enlargedText");
+
+            const lines = inputText.split('\n');
+            const maxLineLength = Math.max(...lines.map(line => countCharacters(line))); // countCharactersを使って行ごとに文字数をカウント
+
+            const screenWidth = window.innerWidth;
+
+            const fontSize = (screenWidth / maxLineLength) * 1;
+            enlargedText.style.fontSize = fontSize + "px";
+
+            const formattedText = inputText.replace(/\n/g, '<br>');
+            enlargedText.innerHTML = formattedText;
+        }
+    </script>
+</body>
+</html>
